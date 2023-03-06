@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('users');
+        
 
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id('user_id');
             $table->string('name');
             $table->string('email')->unique();
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->date('birth');
             $table->string('gender');
-            $table->string('avatar_path')->unique();
+            $table->string('avatar_path')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->boolean('is_banned')->default(0);
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('customers');
     }
 };

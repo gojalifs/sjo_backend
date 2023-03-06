@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->foreign('user_id')->references('user_id')->on('users')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-                $table->unsignedBigInteger('frame_id');
+            $table->unsignedBigInteger('frame_id');
             $table->foreign('frame_id')->references('frame_id')->on('frames')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
@@ -29,7 +29,7 @@ return new class extends Migration {
                 ->on('frame_colors')
                 ->restrictOnUpdate()
                 ->restrictOnDelete();
-                
+
             $table->timestamps();
         });
     }

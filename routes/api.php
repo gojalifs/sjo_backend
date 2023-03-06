@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\CardController;
+use App\Http\Controllers\API\CartController;
+use App\Http\Controllers\API\CustomerController;
+use App\Http\Controllers\API\FrameController;
+use App\Http\Controllers\API\FrameImagesController;
+use App\Http\Controllers\API\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +23,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('customers', CustomerController::class);
+Route::apiResource('cards', CardController::class);
+Route::apiResource('frames', FrameController::class);
+Route::apiResource('frameimages', FrameImagesController::class);
+Route::apiResource('cart', CartController::class);
+Route::apiResource('transact', TransactionController::class);

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('frames', function (Blueprint $table) {
             $table->id('frame_id');
             $table->string('name', 50);
+            $table->string('description', 255)->default('Tidak Ada Deskripsi');
             $table->integer('stock');
             $table->decimal('price', 15, 4);
             $table->enum('material', ['metal', 'plastics']);

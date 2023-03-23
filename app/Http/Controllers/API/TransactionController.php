@@ -60,22 +60,26 @@ class TransactionController extends Controller
                 $total = null;
                 $grand_total = null;
 
-                DB::select('CALL insert_transaction_detail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                DB::select('CALL insert_transaction_detail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
                     $number,
                     $transaction['lens_id'],
                     $transaction['frame_id'],
                     $transaction['qty'],
-                    $transaction['eye'],
-                    $transaction['sphere'],
-                    $transaction['cylinder'],
-                    $transaction['axis'],
-                    $transaction['add'],
-                    $transaction['prism'],
-                    $transaction['base'], &
-                    $transact_id, &
-                    $total, &
-                    $grand_total
+                    $transaction['rsphere'],
+                    $transaction['lsphere'],
+                    $transaction['rcylinder'],
+                    $transaction['lcylinder'],
+                    $transaction['raxis'],
+                    $transaction['laxis'],
+                    $transaction['rprism'],
+                    $transaction['lprism'],
+                    $transaction['radd'],
+                    $transaction['ladd'],
+                    $transaction['rbase'],
+                    $transaction['lbase'],
+                    
                 ]);
+
 
                 // Log the transaction detail
                 Log::info('Transaction with ID ' . $transact_id . ' has been created');
@@ -124,12 +128,18 @@ class TransactionController extends Controller
                                 'lensPrice' => $item->lens_price,
                                 'qty' => $item->qty,
                                 'eye' => $item->eye,
-                                'sphere' => $item->sphere,
-                                'cylinder' => $item->cylinder,
-                                'axis' => $item->axis,
-                                'adds' => $item->adds,
-                                'prism' => $item->prism,
-                                'base' => $item->base,
+                                'lsphere' => $item->lsphere,
+                                'lcylinder' => $item->lcylinder,
+                                'laxis' => $item->laxis,
+                                'ladds' => $item->ladds,
+                                'lprism' => $item->lprism,
+                                'lbase' => $item->lbase,
+                                'rsphere' => $item->rsphere,
+                                'rcylinder' => $item->rcylinder,
+                                'raxis' => $item->raxis,
+                                'radds' => $item->radds,
+                                'rprism' => $item->rprism,
+                                'rbase' => $item->rbase,
                                 'subTotal' => $item->subtotal,
                                 'total' => $item->grand_total,
                                 'deliveryFee' => $item->delivery_fee,

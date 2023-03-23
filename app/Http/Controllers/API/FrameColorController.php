@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CardResource;
-use App\Models\credit_card;
+use App\Http\Resources\FrameColorResource;
+use App\Models\FrameColor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class CardController extends Controller
+class FrameColorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +17,7 @@ class CardController extends Controller
      */
     public function index()
     {
-        $card = credit_card::all();
-        $result = CardResource::collection($card);
-        return $this->sendResponse($result, 'Success');
+
     }
 
     /**
@@ -29,29 +28,35 @@ class CardController extends Controller
      */
     public function store(Request $request)
     {
-        $data = new CardResource(credit_card::create($request));
-        return $this->sendResponse($data, 'Success adding data');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\credit_card  $credit_card
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\FrameColor $frameId
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(credit_card $credit_card)
-    {
-        //
+    public function show(int $frameId)
+{
+    $frameColors = FrameColor::where('frame_id', '=', $frameId)->get();
+    
+    if ($frameColors->isEmpty()) {
+        return $this->sendError('Data not found');
     }
+
+    return $this->sendResponse(new FrameColorResource($frameColors), 'Data found');
+}
+
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\credit_card  $credit_card
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, credit_card $credit_card)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -59,10 +64,10 @@ class CardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\credit_card  $credit_card
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(credit_card $credit_card)
+    public function destroy($id)
     {
         //
     }

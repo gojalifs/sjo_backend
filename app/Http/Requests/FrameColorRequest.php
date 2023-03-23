@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CustomerRegisterRequest extends FormRequest
+class FrameColorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class CustomerRegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,12 +24,7 @@ class CustomerRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => 'required',
-            "email" => 'required',
-            "phone" => 'required',
-            "password" => 'required',
-            "birth" => 'required',
-            "gender" => 'required',
+            //
         ];
     }
 }

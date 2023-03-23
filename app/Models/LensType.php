@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LensType extends Model
 {
+    
     use HasFactory;
+    protected $table = 'lens';
 }

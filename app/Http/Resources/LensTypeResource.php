@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CardResource extends JsonResource
+class LensTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,11 +15,9 @@ class CardResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => $this->id,
-            "userId" => $this->user_id,
-            "number" => $this->number,
-            "vcc" => $this->vcc,
-            "validThru" => $this->valid_thru
+            'lensId' => $this->lens_id,
+            'type' => $this->type,
+            'price' => $this->price
         ];
     }
 }

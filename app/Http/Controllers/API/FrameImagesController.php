@@ -49,18 +49,18 @@ class FrameImagesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\FrameImage  $frameImage
+     * @param  \App\Models\FrameImage $frameImage
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($frameImage)
+    public function show(int $frameImage)
     {
         $images = DB::table('frame_images')
             ->where('frame_id', '=', $frameImage)
             ->get();
 
-        if (!$images->count()) {
-            abort(404, 'Image not found');
-        }
+        // if (!$images->count()) {
+        //     abort(404, 'Image not found');
+        // }
 
         $grouped = $images->groupBy('frame_id')->map(function ($item) {
             return [

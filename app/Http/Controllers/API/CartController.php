@@ -40,7 +40,7 @@ class CartController extends Controller
         // Get input data
         $user_id = $request->input('user_id');
 
-        $carts = $request->input('carts');
+        $carts = $request->input('cart');
 
         // Start database cart
         DB::beginTransaction();
@@ -56,24 +56,25 @@ class CartController extends Controller
             foreach ($carts as $cart) {
                 // Call the stored procedure for each cart detail
                 $cart_id = null;
-                $total = null;
-                $grand_total = null;
 
-                DB::select('CALL insert_carts_detail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                DB::select('CALL insert_cart_detail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
                     $number,
                     $cart['lens_id'],
                     $cart['frame_id'],
                     $cart['qty'],
-                    $cart['eye'],
-                    $cart['sphere'],
-                    $cart['cylinder'],
-                    $cart['axis'],
-                    $cart['add'],
-                    $cart['prism'],
-                    $cart['base'], &
-                    $cart_id, &
-                    $total, &
-                    $grand_total
+                    $cart['rsphere'],
+                    $cart['lsphere'],
+                    $cart['rcylinder'],
+                    $cart['lcylinder'],
+                    $cart['raxis'],
+                    $cart['laxis'],
+                    $cart['rprism'],
+                    $cart['lprism'],
+                    $cart['radd'],
+                    $cart['ladd'],
+                    $cart['rbase'],
+                    $cart['lbase']
+
                 ]);
 
                 // Log the cart detail
@@ -85,7 +86,10 @@ class CartController extends Controller
             DB::commit();
 
             // Return a success response
-            return response()->json(['message' => 'cart added successfully']);
+            return response()->json([
+                'message' => 'cart added successfully',
+                'status' => true
+            ]);
 
         } catch (Exception $e) {
             // Rollback the database cart
@@ -110,41 +114,49 @@ class CartController extends Controller
         $carts = DB::table('view_cart_details')
             ->where('user_id', $user_id)
             ->get()
-            ->groupBy('transaction_number')
-            ->map(function ($cart) {
-                $cart_details = $cart->first();
-                $details = $cart->map(
-                    function ($item) {
-                            return [
-                                // 'qty' => $item->qty,
-                                // 'frameName' => $item->frame_name,
-                                // 'framePrice' => $item->frame_price,
-                                // 'lensType' => $item->lens_type,
-                                // 'lensPrice' => $item->lens_price,
-                                'frameName' => $item->frame_name,
-                                'framePrice' => $item->frame_price,
-                                'lensType' => $item->lens_type,
-                                'lensPrice' => $item->lens_price,
-                                'qty' => $item-> qty,
-                                'eye' => $item-> eye,
-                                'sphere' => $item-> sphere,
-                                'cylinder' => $item-> cylinder,
-                                'axis' => $item-> axis,
-                                'adds' => $item-> adds,
-                                'prism' => $item-> prism,
-                                'base' => $item-> base,
-                                
-                            ];
-                        }
-                )->toArray();
+            ->toArray();
 
-                $cart_details->details = $details;
+        $result = [];
+        foreach ($carts as $cart) {
+            $details = [
+                'frameName' => $cart->frame_name,
+                'framePrice' => $cart->frame_price,
+                'lensType' => $cart->lens_type,
+                'lensPrice' => $cart->lens_price,
+                'qty' => $cart->qty,
+                'eye' => $cart->eye,
+                'lsphere' => $cart->lsphere,
+                'lcylinder' => $cart->lcylinder,
+                'laxis' => $cart->laxis,
+                'ladds' => $cart->ladds,
+                'lprism' => $cart->lprism,
+                'lbase' => $cart->lbase,
+                'rsphere' => $cart->rsphere,
+                'rcylinder' => $cart->rcylinder,
+                'raxis' => $cart->raxis,
+                'radds' => $cart->radds,
+                'rprism' => $cart->rprism,
+                'rbase' => $cart->rbase,
+            ];
 
-                return new CartResource($cart_details);
-            });
+            $cart_id = $cart->cart_number;
+            if (!array_key_exists($cart_id, $result)) {
+                $result[$cart_id] = [
+                    'cartId' => $cart->cart_id,
+                    'cartNumber' => $cart_id,
+                    'user' => $cart->user_id,
+                    'createdAt' => $cart->created_at,
+                    'details' => [],
+                ];
+            }
+            $result[$cart_id]['details'][] = $details;
+        }
+
+        $carts = array_values($result);
 
         return $this->sendResponse($carts, 'data fetched');
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -169,4 +181,4 @@ class CartController extends Controller
         $cart->delete();
         return $this->sendResponse($cart, 'Success Delete');
     }
-}
+} ?>
